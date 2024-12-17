@@ -14,11 +14,14 @@
 
 //#define GLFW_INCLUDE_VULKAN
 
-bool g_ApplicationRunning = 1;
-bool g_WindowOpen = 1;
+inline bool g_ApplicationRunning = 1;
+inline bool g_WindowOpen = 1;
+
+inline ResourceManager*         rm;
+inline EntityComponentSystem*   ecs;
 
 Application::Application(ApplicationSpecification& specification)
-: m_Specification(specification), g_Renderer(specification), g_Camera(30.0f, 0.1f, 1000.0f)
+: m_Specification(specification), g_Renderer(specification), g_Camera(30.0f, 0.1f, 1000.0f), g_Physics()
 {
     Init();
 }
@@ -30,59 +33,85 @@ Application::~Application()
 
 void Application::Init()
 {
-    Material* green = rm.getMaterial("green");
+    rm = new ResourceManager();
+    ecs = new EntityComponentSystem();
+    
+    Material* green = rm->getMaterial("green");
     green->setColor( {0.0f, 0.25f, 0.0f} );
     green->setEmission( {0.0f, 0.0f, 0.0f} );
     
-    Material* light = rm.getMaterial("light");
+    Material* light = rm->getMaterial("light");
     light->setColor( {0.8f, 0.8f, 0.1f} );
     light->setEmission( glm::vec3(0.8f, 0.8f, 0.1f) * 2.0f );
     
-    Material* red = rm.getMaterial("red");
+    Material* red = rm->getMaterial("red");
     red->setColor( {0.7f, 0.02f, 0.004f} );
     red->setEmission( glm::vec3(1.0f, 0.05f, 0.01f) * 0.0f );
     
-    Material* orange = rm.getMaterial("orange");
+    Material* orange = rm->getMaterial("orange");
     orange->setColor( {0.8f, 0.4f, 0.05f} );
     orange->setEmission( glm::vec3(1.0f, 0.6f, 0.05f) * 0.0f );
     
-    Material* cream = rm.getMaterial("cream");
+    Material* cream = rm->getMaterial("cream");
     cream->setColor( {0.85f, 0.7f, 0.7f} );
     cream->setEmission( glm::vec3(0.95f, 0.8f, 0.8f) * 0.0f );
     
     
-    Entity dragon = ecs.createEntity();
-    ecs.addComponent(dragon, BVHComponent{rm.getBVH("/Users/nathan/Downloads/Dragon_800K.obj")});
-    ecs.addComponent(dragon, TransformComponent{glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, glm::pi<float>()), 1.0f});
-    ecs.addComponent(dragon, MaterialComponent{green});
-    ecs.addComponent(dragon, PhysicsComponent{1.0f, glm::mat3(1.0f), glm::vec3(0.0f), glm::vec3(0.0f)});
+    Entity dragon = ecs->createEntity();
+//    ecs->addComponent(dragon, MeshComponent{rm->getMesh("/Users/nathan/Downloads/Dragon_80K.obj")});
+    ecs->addComponent(dragon, MeshComponent{rm->getMesh("/Users/nathan/Downloads/untitled.obj")});
+//    ecs->addComponent(dragon, BVHComponent{rm->getBVH("/Users/nathan/Downloads/Dragon_80K.obj")});
+    ecs->addComponent(dragon, BVHComponent{rm->getBVH("/Users/nathan/Downloads/untitled.obj")});
+    ecs->addComponent(dragon, TransformComponent{ .translation=glm::vec3(0.0f, 0.0f, 0.0f), .rotation=glm::vec3(0.0f, 0.0f, glm::pi<float>()), .scale=1.0f});
+    ecs->addComponent(dragon, MaterialComponent{green});
+    ecs->addComponent(dragon, PhysicsComponent{ .mass=10.0f });
+    ecs->addComponent(dragon, ColliderComponent{ .boundingRadius=100.0f,
+            .inertiaTensor = glm::mat3{1.0f/12.0f * 10.0f * (2*2 + 2*2), 0.0f, 0.0f,
+                0.0f, 1.0f/12.0f * 10.0f * (2*2 + 2*2), 0.0f,
+                0.0f, 0.0f, 1.0f/12.0f * 10.0f * (2*2 + 2*2) } } ); //not actually correct});
     
-    //Entity statue = ecs.createEntity();
-    //ecs.addComponent(statue, BVHComponent{rm.getBVH("/Users/nathan/Downloads/xyzrgb_statuette.ply")});
-    //ecs.addComponent(statue, TransformComponent{glm::vec3(0.0f), glm::vec3(glm::pi<float>(), glm::pi<float>(), 0.0f), 0.02f} );
-    //ecs.addComponent(statue, MaterialComponent{red});
+    //Entity statue = ecs->createEntity();
+    //ecs->addComponent(statue, BVHComponent{rm->getBVH("/Users/nathan/Downloads/xyzrgb_statuette.ply")});
+    //ecs->addComponent(statue, TransformComponent{glm::vec3(0.0f), glm::vec3(glm::pi<float>(), glm::pi<float>(), 0.0f), 0.02f} );
+    //ecs->addComponent(statue, MaterialComponent{red});
     
-    Entity Light = ecs.createEntity();
-    ecs.addComponent(Light, BVHComponent{rm.getBVH("/Users/nathan/Downloads/untitled.obj")});
-    ecs.addComponent(Light, TransformComponent{ glm::vec3(-6.0f, -15.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 8.0f} );
-    ecs.addComponent(Light, MaterialComponent{light});
     
-    //Entity sponza = ecs.createEntity();
-    //ecs.addComponent(sponza, BVHComponent{rm.getBVH("/Users/nathan/Downloads/sponza.obj")});
-    //ecs.addComponent(sponza, TransformComponent{ glm::vec3(20.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 0.5f} );
-    //ecs.addComponent(sponza, MaterialComponent{cream});
     
-    //Entity hairball = ecs.createEntity();
-    //ecs.addComponent(hairball, BVHComponent{rm.getBVH("/Users/nathan/Downloads/hairball.obj")});
-    //ecs.addComponent(hairball, TransformComponent{ glm::vec3(-6.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 0.25f} );
-    //ecs.addComponent(hairball, MaterialComponent{red});
+//    Entity Light = ecs->createEntity();
+//    ecs->addComponent(Light, MeshComponent{rm->getMesh("/Users/nathan/Downloads/untitled.obj")});
+//    ecs->addComponent(Light, BVHComponent{rm->getBVH("/Users/nathan/Downloads/untitled.obj")});
+//    ecs->addComponent(Light, TransformComponent{ glm::vec3(-6.0f, -15.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 8.0f} );
+//    ecs->addComponent(Light, MaterialComponent{light});
+//    ecs->addComponent(Light, PhysicsComponent{ .mass=10.0f });
+//    ecs->addComponent(Light, ColliderComponent{ .boundingRadius=100.0f });
     
-    //Entity knight = ecs.createEntity();
-    //ecs.addComponent(knight, BVHComponent{rm.getBVH("/Users/nathan/Downloads/Knight.fbx")});
-    //ecs.addComponent(knight, TransformComponent{ glm::vec3(-4.0f, -0.0f, 6.0f), glm::vec3(glm::half_pi<float>(), 0.0f, 0.0f), 2.0f} );
-    //ecs.addComponent(knight, MaterialComponent{orange});
+    Entity Light = ecs->createEntity();
+    ecs->addComponent(Light, MeshComponent{rm->getMesh("/Users/nathan/Downloads/untitled.obj")});
+    ecs->addComponent(Light, BVHComponent{rm->getBVH("/Users/nathan/Downloads/untitled.obj")});
+    ecs->addComponent(Light, TransformComponent{ .translation=glm::vec3(0.0f, -4.8f, 0.0f), .scale=1.0f /*, .rotation=glm::vec3(1.0f, 1.0f, 0.0f)*/ } );
+    ecs->addComponent(Light, MaterialComponent{light});
+    ecs->addComponent(Light, PhysicsComponent{ .mass=1000000000000.0f, .velocity=glm::vec3(0.0f, 2.0f, 0.0f), .angularVelocity=glm::vec3(0.0f, 0.0f, 0.0f) });
+    ecs->addComponent(Light, ColliderComponent{ .boundingRadius=100.0f,
+            .inertiaTensor = glm::mat3{1.0f/12.0f * 10.0f * (2*2 + 2*2), 0.0f, 0.0f,
+                0.0f, 1.0f/12.0f * 10.0f * (2*2 + 2*2), 0.0f,
+                0.0f, 0.0f, 1.0f/12.0f * 10.0f * (2*2 + 2*2) } } ); //not actually correct
     
-    //ecs.addComponent(test, BVHComponent{rm.getBVH("/Users/nathan/Downloads/untitled.obj")});
+    //Entity sponza = ecs->createEntity();
+    //ecs->addComponent(sponza, BVHComponent{rm->getBVH("/Users/nathan/Downloads/sponza.obj")});
+    //ecs->addComponent(sponza, TransformComponent{ glm::vec3(20.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 0.5f} );
+    //ecs->addComponent(sponza, MaterialComponent{cream});
+    
+    //Entity hairball = ecs->createEntity();
+    //ecs->addComponent(hairball, BVHComponent{rm->getBVH("/Users/nathan/Downloads/hairball.obj")});
+    //ecs->addComponent(hairball, TransformComponent{ glm::vec3(-6.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 0.25f} );
+    //ecs->addComponent(hairball, MaterialComponent{red});
+    
+    //Entity knight = ecs->createEntity();
+    //ecs->addComponent(knight, BVHComponent{rm->getBVH("/Users/nathan/Downloads/Knight.fbx")});
+    //ecs->addComponent(knight, TransformComponent{ glm::vec3(-4.0f, -0.0f, 6.0f), glm::vec3(glm::half_pi<float>(), 0.0f, 0.0f), 2.0f} );
+    //ecs->addComponent(knight, MaterialComponent{orange});
+    
+    //ecs->addComponent(test, BVHComponent{rm->getBVH("/Users/nathan/Downloads/untitled.obj")});
 }
 
 void Application::Run()
@@ -100,6 +129,8 @@ void Application::Run()
         
     //std::thread Renderer( [&Renderer, this](){g_Renderer.render(g_ApplicationRunning, g_Scene, g_Camera);} );
 
+    std::thread physicsThread( [&physicsThread, this]() { g_Physics.update(); });
+        
     m_LastFrameTime = duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
 
     while (g_ApplicationRunning)
@@ -111,8 +142,10 @@ void Application::Run()
         
         g_Camera.OnUpdate(g_TimeStep);
         
-        g_Renderer.render(g_ApplicationRunning, ecs, g_Camera);
+        g_Renderer.render(g_Camera);
     }
+    
+    physicsThread.join();
     
     //Scene.join();
     //Camera.join();
@@ -124,6 +157,9 @@ void Application::Shutdown()
 {
     g_ApplicationRunning = false;
     g_Renderer.cleanUp();
+    
+    delete ecs;
+    delete rm;
 }
 
 void Application::OnUpdate(float ts)

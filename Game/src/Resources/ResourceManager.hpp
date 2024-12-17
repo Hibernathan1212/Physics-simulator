@@ -5,14 +5,15 @@
 //  Created by Nathan Thurber on 14/10/24.
 //
 
-#pragma once
 
 #include "MeshResource.hpp"
 #include "Material.hpp"
 #include "BVH.hpp"
 
-#include <stdio.h>
+//#include <stdio.h>
 #include <map>
+
+#pragma once
 
 class ResourceManager
 {

@@ -42,3 +42,9 @@ std::unordered_map<Entity, PhysicsComponent>& EntityComponentSystem::getComponen
 {
     return m_physicsComponents;
 }
+
+template <>
+std::unordered_map<Entity, ColliderComponent>& EntityComponentSystem::getComponentArray<ColliderComponent>()
+{
+    return m_colliderComponents;
+}

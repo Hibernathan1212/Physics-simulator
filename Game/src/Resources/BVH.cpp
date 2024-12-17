@@ -9,8 +9,6 @@
 
 #include "Utils/Timer.hpp"
 
-int testtest = 0;
-
 BVH::BVH(MeshResource& mesh)
 {
     Timer timer;
@@ -132,13 +130,13 @@ void BVH::Split(int parentIndex, int triGlobalStart, int triNum, int depth)
 std::tuple<int, float, float> BVH::ChooseSplit(Node node, int start, int count)
 {
     if (count <= 1)
-        return std::make_tuple(0, 0, MAXFLOAT);
+        return std::make_tuple(0, 0, FLT_MAX);
 
     float bestSplitPos = 0;
     int bestSplitAxis = 0;
     const int numSplitTests = 10;
 
-    float bestCost = MAXFLOAT;
+    float bestCost = FLT_MAX;
 
     //std::vector<std::thread> threadGroup;
     //threadGroup.reserve(3 * numSplitTests);

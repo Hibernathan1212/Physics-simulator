@@ -5,9 +5,14 @@
 //  Created by Nathan Thurber on 14/10/24.
 //
 
-#pragma once
 
 #include "MeshResource.hpp"
+
+#include <glm/glm.hpp>
+
+#include <vector>
+
+#pragma once
 
 struct Triangle
 {

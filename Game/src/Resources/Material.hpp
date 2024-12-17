@@ -5,9 +5,10 @@
 //  Created by Nathan Thurber on 14/10/24.
 //
 
-#pragma once
 
 #include <glm/glm.hpp>
+
+#pragma once
 
 class Material
 {
@@ -26,6 +27,9 @@ public:
     inline void setEmission(glm::vec3 emission) { this->emission = emission; }
     inline glm::vec3 getEmission() const { return emission; }
 
+    inline void setRestitution(float restituation) {this->restitution = restituation; }
+    inline float getRestitution() const { return restitution; }
+    
 private:
     //std::unordered_map<std::string, Texture*> textures;  // Textures like diffuse, normal, etc.
     glm::vec3   albedo{1.0f};

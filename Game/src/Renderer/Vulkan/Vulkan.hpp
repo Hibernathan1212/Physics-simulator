@@ -8,12 +8,14 @@
 #pragma once
 
 //#include "Scene/Scene.hpp"
+//#include "Application/Application.hpp"
 #include "Scene/Camera.hpp"
 #include "Resources/EntityComponentSystem.hpp"
 
 #include "Renderer/ShaderTypes.hpp"
 
 #include "Application/ApplicationSpecification.hpp"
+
 
 
 #define GLFW_INCLUDE_VULKAN
@@ -44,8 +46,8 @@ public:
     void init();
     void cleanUp();
     
-    void render(bool& running, Camera& camera, EntityComponentSystem& ecs);
-    const void drawFrame(Camera& camera, EntityComponentSystem& ecs);
+    void render(Camera& camera);
+    const void drawFrame(Camera& camera);
     
 public:
     inline VkInstance GetInstance() const { return m_Instance; }
@@ -87,7 +89,7 @@ private:
     VkFormat findDepthFormat();
     bool hasStencilComponent(VkFormat format);
     
-    const void updateUniformBuffer(uint32_t currentImage, Camera& camera, EntityComponentSystem& ecs);
+    const void updateUniformBuffer(uint32_t currentImage, Camera& camera);
     
     const void recreateSwapChain();
     const void cleanupSwapChain();

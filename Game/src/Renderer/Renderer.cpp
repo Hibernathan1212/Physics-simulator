@@ -6,11 +6,17 @@
 //
 
 #include "Renderer.hpp"
+
+#include "Resources/EntityComponentSystem.hpp"
+
 #include <iostream>
 
 #include <thread>
 
-extern bool g_ApplicationRunning;
+//extern bool g_WindowOpen;
+//extern bool g_ApplicationRunning;
+
+extern EntityComponentSystem* ecs;
 
 Renderer::Renderer(ApplicationSpecification& specification)
 : m_GraphicsAPI(Graphics_API), m_specification(specification), m_Renderer(m_specification)
@@ -50,9 +56,9 @@ void Renderer::init()
     }
 }
 
-void Renderer::render(bool& Running, EntityComponentSystem& ecs, Camera& g_Camera)
+void Renderer::render(Camera& g_Camera)
 {
-    m_Renderer.render(Running, g_Camera, ecs);
+    m_Renderer.render(g_Camera);
 }
 
 void Renderer::cleanUp()

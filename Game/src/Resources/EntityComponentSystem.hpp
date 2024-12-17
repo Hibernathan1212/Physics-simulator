@@ -5,7 +5,6 @@
 //  Created by Nathan Thurber on 14/10/24.
 //
 
-#pragma once
 
 #include "Components.hpp"
 
@@ -17,6 +16,8 @@
 #include <unordered_map>
 #include <vector>
 
+#pragma once
+
 using Entity = unsigned int;
 
 class EntityComponentSystem
@@ -25,13 +26,13 @@ public:
     Entity createEntity();
 
     template <typename T>
-    void addComponent(Entity entity, T component)
+    void addComponent(Entity& entity, T component)
     {
         getComponentArray<T>()[entity] = component;
     }
 
     template <typename T>
-    void removeComponent(Entity entity, T component)
+    void removeComponent(Entity& entity, T component)
     {
         getComponentArray<T>().erase(entity);
     }
@@ -53,5 +54,7 @@ private:
     std::unordered_map<Entity, BVHComponent> m_BVHComponents;
     std::unordered_map<Entity, TransformComponent> m_transformComponents;
     std::unordered_map<Entity, PhysicsComponent> m_physicsComponents;
+    std::unordered_map<Entity, ColliderComponent> m_colliderComponents;
+
 
 };

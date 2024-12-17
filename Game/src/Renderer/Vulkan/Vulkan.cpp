@@ -7,9 +7,14 @@
 
 #include "Vulkan.hpp"
 
-extern bool             g_ApplicationRunning;
-GLFWAPI GLFWwindow*     g_WindowHandle;
-float                   g_TimeStep;
+#include "Application/Application.hpp"
+
+extern EntityComponentSystem* ecs;
+
+extern bool                     g_ApplicationRunning;
+GLFWAPI GLFWwindow*             g_WindowHandle;
+float                           g_TimeStep;
+
 
 Vulkan::Vulkan(ApplicationSpecification& specification)
 : m_Instance(VK_NULL_HANDLE), m_PhysicalDevice(VK_NULL_HANDLE), m_QueueFamily((uint32_t)-1), m_Device(VK_NULL_HANDLE), m_Allocator(nullptr), m_Surface(VK_NULL_HANDLE), m_SwapChain(VK_NULL_HANDLE), m_Specification(specification)
@@ -67,17 +72,17 @@ void Vulkan::init()
     createSyncObjects();
 }
 
-void Vulkan::render(bool& running, Camera& camera, EntityComponentSystem& ecs)
+void Vulkan::render(Camera& camera)
 {
     //while(!glfwWindowShouldClose(g_WindowHandle) && running)
     //{
     glfwPollEvents();
         
-    drawFrame(camera, ecs);
+    drawFrame(camera);
         
     if (glfwWindowShouldClose(g_WindowHandle))
     {
-        running = false;
+        g_ApplicationRunning = false;
     }
     //}
     vkDeviceWaitIdle(m_Device);
@@ -1175,7 +1180,7 @@ const void Vulkan::createSyncObjects()
     }
 }
 
-const void Vulkan::drawFrame(Camera& camera, EntityComponentSystem& ecs)
+const void Vulkan::drawFrame(Camera& camera)
 {
     vkWaitForFences(m_Device, 1, &m_InFlightFences[m_CurrentFrame], VK_TRUE, UINT64_MAX);
 
@@ -1190,7 +1195,7 @@ const void Vulkan::drawFrame(Camera& camera, EntityComponentSystem& ecs)
     else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
         throw std::runtime_error("[Vulkan] Failed to present swapchain image!");
 
-    updateUniformBuffer(m_CurrentFrame, camera, ecs);
+    updateUniformBuffer(m_CurrentFrame, camera);
     
     vkResetFences(m_Device, 1, &m_InFlightFences[m_CurrentFrame]);
 
@@ -1239,7 +1244,7 @@ const void Vulkan::drawFrame(Camera& camera, EntityComponentSystem& ecs)
     m_CurrentFrame = (m_CurrentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
 
-const void Vulkan::updateUniformBuffer(uint32_t currentImage, Camera& camera, EntityComponentSystem& ecs)
+const void Vulkan::updateUniformBuffer(uint32_t currentImage, Camera& camera)
 {
     glfwGetWindowSize(g_WindowHandle, &m_ViewportWidth, &m_ViewportHeight);
     
@@ -1257,26 +1262,26 @@ const void Vulkan::updateUniformBuffer(uint32_t currentImage, Camera& camera, En
     int nodeCount = 0;
     int triCount = 0;
     int lightCount = 0;
-    for (auto& pair : ecs.getComponentArray<BVHComponent>())
+    for (auto& pair : ecs->getComponentArray<BVHComponent>())
     {
         Entity entity = pair.first;
         //MeshComponent& meshComp = pair.second;
         
-        if (ecs.getComponentArray<MaterialComponent>().count(entity))
+        if (ecs->getComponentArray<MaterialComponent>().count(entity))
         {
+            if (ecs->getComponentArray<TransformComponent>().count(entity))
+                u_Data->objects[objCount].transform = ecs->getComponent<TransformComponent>(entity).getTransform();
+            else
+                u_Data->objects[objCount].transform = glm::mat4(1.0f);
+                        
+            u_Data->objects[objCount].invTransform = glm::inverse(u_Data->objects[objCount].transform);
+
             if (test)
             {
-                if (ecs.getComponentArray<TransformComponent>().count(entity))
-                    u_Data->objects[objCount].transform = ecs.getComponent<TransformComponent>(entity).getTranform();
-                else
-                    u_Data->objects[objCount].transform = glm::mat4(1.0f);
-                
-                u_Data->objects[objCount].invTransform = glm::inverse(u_Data->objects[objCount].transform);
-
                 u_Data->objects[objCount].nodeOffset = nodeCount;
                 u_Data->objects[objCount].triOffset = triCount;
                 
-                Material* material = ecs.getComponent<MaterialComponent>(entity).material;
+                Material* material = ecs->getComponent<MaterialComponent>(entity).material;
                 u_Data->objects[objCount].material.Albedo = material->getAlbedo();
                 u_Data->objects[objCount].material.Roughness = material->getRoughness();
                 u_Data->objects[objCount].material.Emission = material->getEmission();
@@ -1287,7 +1292,7 @@ const void Vulkan::updateUniformBuffer(uint32_t currentImage, Camera& camera, En
                     lightCount++;
                 }
                 
-                BVH* bvh = ecs.getComponent<BVHComponent>(entity).bvh;
+                BVH* bvh = ecs->getComponent<BVHComponent>(entity).bvh;
                 
                 std::vector<Triangle> tris = bvh->getTriangles();
                 for (int i = 0; i < tris.size(); i++)
@@ -1310,8 +1315,8 @@ const void Vulkan::updateUniformBuffer(uint32_t currentImage, Camera& camera, En
                     u_Data->nodes[nodeCount].triangleCount = nodes[i].TriangleCount;
                     nodeCount++;
                 }
-                objCount++;
             }
+            objCount++;
         }
     }
     

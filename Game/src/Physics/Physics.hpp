@@ -5,14 +5,21 @@
 //  Created by Nathan Thurber on 25/5/24.
 //
 
-#include "Scene/Object.hpp"
+#pragma once
 
-#include <iostream>
+//#include "Scene/Object.hpp"
 
-#include <glm/glm.hpp>
-#include <vector>
+#include "Resources/EntityComponentSystem.hpp"
 
 #include <glm/gtx/string_cast.hpp>
+#include <glm/glm.hpp>
+
+#include <iostream>
+#include <vector>
+
+
+extern EntityComponentSystem* ecs;
+
 
 class Physics
 {
@@ -20,13 +27,17 @@ public:
     Physics();
     ~Physics();
     
-    void OnUpdate(); //wind, GR field, 
+    void update();
     
-    static void solveCollisions(Object& object1, Object& object2);
+    void updatePhysics(); //wind, GR field,
     
-    static void applyNewtonianGravity(Object& object1, Object& object2);
+    void updateBodies(double dt);
     
-    static void applyForce(Object& object, glm::vec3 Force, glm::vec3 forcePosition);
+    void solveCollisions(const Entity object1, const Entity object2);
+    
+    void applyNewtonianGravity(const Entity object1, const Entity object2);
+//
+//    void applyForce(Object& object, glm::vec3 Force, glm::vec3 forcePosition);
     
     //collisions
     //gravity
@@ -41,17 +52,21 @@ public:
     //GR
     //electromagnetism
     
-    static void updatePosition(Object& object, double dt);
-    
-    static void updateRotation(Object& object, double dt);
+//    static void updatePosition(Object& object, double dt);
+//    
+//    static void updateRotation(Object& object, double dt);
 
     
 private:
     constexpr const static float G = 6.67430 * 0.00000000001;
     
 private:
+    
+    double m_updateTime = 0;
+    double m_lastUpdateTime = 0;
+    double m_timeStep = 0.00001f;
+    
     static std::pair<std::vector<glm::vec4>, size_t> GetFaceNormals(std::vector<glm::vec3>& polytope, std::vector<size_t>& faces);
     
     static void AddIfUniqueEdge(std::vector<std::pair<size_t, size_t>>& edges, const std::vector<size_t>& faces, size_t a, size_t b);
-
 };

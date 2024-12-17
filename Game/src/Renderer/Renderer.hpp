@@ -4,13 +4,14 @@
 //
 //  Created by Nathan Thurber on 17/5/24.
 //
-#include <stdio.h>
+
 
 //#include "Scene/Scene.hpp"
 #include "Scene/Camera.hpp"
-#include "Resources/EntityComponentSystem.hpp"
 
 #include "Application/ApplicationSpecification.hpp"
+
+#pragma once
 
 //#include "Metal.hpp"
 
@@ -41,15 +42,13 @@
 
 #endif
 
-extern bool g_WindowOpen;
-
 class Renderer
 {
 public:
     Renderer(ApplicationSpecification& specification);
     ~Renderer();
     void beginRenderThread();
-    void render(bool& Running, EntityComponentSystem& ecs, Camera& g_Camera);
+    void render(Camera& g_Camera);
     void init();
     void cleanUp();
 
@@ -71,7 +70,7 @@ private:
 #endif
 };
 
-static void glfw_error_callback(int error, const char* description)
-{
-    fprintf(stderr, "Glfw Error %d: %s\n", error, description);
-}
+//static void glfw_error_callback(int error, const char* description)
+//{
+//    fprintf(stderr, "Glfw Error %d: %s\n", error, description);
+//}

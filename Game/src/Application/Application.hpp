@@ -5,10 +5,13 @@
 //  Created by Nathan Thurber on 17/5/24.
 //
 
-#include "Renderer/Renderer.hpp"
+#pragma once
+
 #include "Resources/ResourceManager.hpp"
-#include "Resources/EntityComponentSystem.hpp"
-#include "Resources/BVH.hpp"
+//#include "Resources/EntityComponentSystem.hpp"
+#include "Renderer/Renderer.hpp"
+#include "Physics/Physics.hpp"
+//#include "Resources/BVH.hpp"
 //#include "Scene/Scene.hpp"
 
 #include "Application/ApplicationSpecification.hpp"
@@ -22,13 +25,12 @@ public:
     void Close();
     
 public:
-    ResourceManager         rm;
-    EntityComponentSystem   ecs;
     Camera                  g_Camera;
     //Scene                   g_Scene;
     Renderer                g_Renderer;
+    Physics                 g_Physics;
     
-public:
+private:
     float g_TimeStep;
     
 private:
