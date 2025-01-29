@@ -390,3 +390,5 @@ void GJKcollision::AddIfUniqueEdge(std::vector<std::pair<size_t, size_t>>& edges
         edges.emplace_back(faces[a], faces[b]);
     }
 }
+
+

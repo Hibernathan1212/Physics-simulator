@@ -18,3 +18,4 @@ Application* CreateApplication(int argc, char** argv)
     Application* app = new Application(spec);
     return app;
 }
+

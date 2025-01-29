@@ -16,6 +16,9 @@
 		D81B4C292BF72E9F00AB0146 /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D81B4C272BF72E9F00AB0146 /* Renderer.cpp */; };
 		D81B4C2D2BF7A5C800AB0146 /* Vulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D81B4C2B2BF7A5C800AB0146 /* Vulkan.cpp */; };
 		D886A9722BFA40F600BCF079 /* glm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D886A7D72BFA40F600BCF079 /* glm.cpp */; };
+		D898FEF52D01D5270044570C /* GJKcollision.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D898FEF42D01D5270044570C /* GJKcollision.cpp */; };
+		D898FEF82D01D5330044570C /* BVHcollision.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D898FEF72D01D5330044570C /* BVHcollision.cpp */; };
+		D898FEFB2D01D5610044570C /* Collisions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D898FEFA2D01D5610044570C /* Collisions.cpp */; };
 		D89B10342C3E2E3300524169 /* libvulkan.1.3.283.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = D8CA2DF92C3D37FA0002C56D /* libvulkan.1.3.283.dylib */; };
 		D89B104F2C3E4D5300524169 /* libvulkan.1.3.283.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = D8CA2DF92C3D37FA0002C56D /* libvulkan.1.3.283.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		D8B2F4402C01EED100CCD451 /* Physics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8B2F43E2C01EED100CCD451 /* Physics.cpp */; };
@@ -547,6 +550,12 @@
 		D886A9772BFB9B8700BCF079 /* Shader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Shader.vert; sourceTree = "<group>"; };
 		D886A9782BFB9B8700BCF079 /* Shader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Shader.frag; sourceTree = "<group>"; };
 		D886A97A2BFB9B9F00BCF079 /* CompileShaders.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = CompileShaders.sh; sourceTree = "<group>"; };
+		D898FEF32D01D5270044570C /* GJKcollision.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GJKcollision.hpp; sourceTree = "<group>"; };
+		D898FEF42D01D5270044570C /* GJKcollision.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GJKcollision.cpp; sourceTree = "<group>"; };
+		D898FEF62D01D5330044570C /* BVHcollision.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BVHcollision.hpp; sourceTree = "<group>"; };
+		D898FEF72D01D5330044570C /* BVHcollision.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BVHcollision.cpp; sourceTree = "<group>"; };
+		D898FEF92D01D5610044570C /* Collisions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Collisions.hpp; sourceTree = "<group>"; };
+		D898FEFA2D01D5610044570C /* Collisions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Collisions.cpp; sourceTree = "<group>"; };
 		D8B2F43E2C01EED100CCD451 /* Physics.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Physics.cpp; sourceTree = "<group>"; };
 		D8B2F43F2C01EED100CCD451 /* Physics.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Physics.hpp; sourceTree = "<group>"; };
 		D8B2F4412C01EEE300CCD451 /* Scene.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Scene.cpp; sourceTree = "<group>"; };
@@ -785,6 +794,7 @@
 		D87DEE5E2BF8B3C10042C244 /* Physics */ = {
 			isa = PBXGroup;
 			children = (
+				D898FEF12D01D4EC0044570C /* Collisions */,
 				D8B2F43E2C01EED100CCD451 /* Physics.cpp */,
 				D8B2F43F2C01EED100CCD451 /* Physics.hpp */,
 			);
@@ -1358,6 +1368,19 @@
 			path = scripts;
 			sourceTree = "<group>";
 		};
+		D898FEF12D01D4EC0044570C /* Collisions */ = {
+			isa = PBXGroup;
+			children = (
+				D898FEF32D01D5270044570C /* GJKcollision.hpp */,
+				D898FEF42D01D5270044570C /* GJKcollision.cpp */,
+				D898FEF62D01D5330044570C /* BVHcollision.hpp */,
+				D898FEF72D01D5330044570C /* BVHcollision.cpp */,
+				D898FEF92D01D5610044570C /* Collisions.hpp */,
+				D898FEFA2D01D5610044570C /* Collisions.cpp */,
+			);
+			path = Collisions;
+			sourceTree = "<group>";
+		};
 		D8AC083A2CAE5B3900D5D2C7 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -1629,6 +1652,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D898FEF82D01D5330044570C /* BVHcollision.cpp in Sources */,
 				D886A9722BFA40F600BCF079 /* glm.cpp in Sources */,
 				D81B4C2D2BF7A5C800AB0146 /* Vulkan.cpp in Sources */,
 				D8B2F4462C02E8DE00CCD451 /* Camera.cpp in Sources */,
@@ -1645,9 +1669,11 @@
 				D81B4C262BF71B8500AB0146 /* App.cpp in Sources */,
 				D81B4C1F2BF7184D00AB0146 /* Application.cpp in Sources */,
 				D8B2F4432C01EEE300CCD451 /* Scene.cpp in Sources */,
+				D898FEF52D01D5270044570C /* GJKcollision.cpp in Sources */,
 				D8EFEF672CBCFC41004AB61B /* MeshResource.cpp in Sources */,
 				D8CCF1302C12D95400C482B1 /* Metal-cpp.cpp in Sources */,
 				D81B4C172BF717EC00AB0146 /* entrypoint.cpp in Sources */,
+				D898FEFB2D01D5610044570C /* Collisions.cpp in Sources */,
 				D8EFEFCB2CBD62CC004AB61B /* BVH.cpp in Sources */,
 				D8B2F4402C01EED100CCD451 /* Physics.cpp in Sources */,
 				D8EFEF5F2CBCE11A004AB61B /* ResourceManager.cpp in Sources */,

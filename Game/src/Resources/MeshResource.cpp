@@ -142,7 +142,7 @@ const glm::vec3 MeshResource::getAverageSupportPoint(glm::vec3 direction)
     for (const Vertex& vertex : vertices)
     {
         float dot = glm::dot(direction, vertex.position);
-        if (dot < maxDot + 1e-3 && dot > maxDot - 1e-3)
+        if (dot > maxDot - 1e-2)
         {
             supportPoints.push_back(vertex.position);
         }

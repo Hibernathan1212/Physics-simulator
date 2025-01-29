@@ -58,10 +58,10 @@ void Application::Init()
     
     
     Entity dragon = ecs->createEntity();
-//    ecs->addComponent(dragon, MeshComponent{rm->getMesh("/Users/nathan/Downloads/Dragon_80K.obj")});
-    ecs->addComponent(dragon, MeshComponent{rm->getMesh("/Users/nathan/Downloads/untitled.obj")});
-//    ecs->addComponent(dragon, BVHComponent{rm->getBVH("/Users/nathan/Downloads/Dragon_80K.obj")});
-    ecs->addComponent(dragon, BVHComponent{rm->getBVH("/Users/nathan/Downloads/untitled.obj")});
+    ecs->addComponent(dragon, MeshComponent{rm->getMesh("/Users/nathan/Downloads/Dragon_800K.obj")});
+//    ecs->addComponent(dragon, MeshComponent{rm->getMesh("/Users/nathan/Downloads/untitled.obj")});
+    ecs->addComponent(dragon, BVHComponent{rm->getBVH("/Users/nathan/Downloads/Dragon_800K.obj")});
+//    ecs->addComponent(dragon, BVHComponent{rm->getBVH("/Users/nathan/Downloads/untitled.obj")});
     ecs->addComponent(dragon, TransformComponent{ .translation=glm::vec3(0.0f, 0.0f, 0.0f), .rotation=glm::vec3(0.0f, 0.0f, glm::pi<float>()), .scale=1.0f});
     ecs->addComponent(dragon, MaterialComponent{green});
     ecs->addComponent(dragon, PhysicsComponent{ .mass=10.0f });
@@ -77,24 +77,24 @@ void Application::Init()
     
     
     
-//    Entity Light = ecs->createEntity();
-//    ecs->addComponent(Light, MeshComponent{rm->getMesh("/Users/nathan/Downloads/untitled.obj")});
-//    ecs->addComponent(Light, BVHComponent{rm->getBVH("/Users/nathan/Downloads/untitled.obj")});
-//    ecs->addComponent(Light, TransformComponent{ glm::vec3(-6.0f, -15.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 8.0f} );
-//    ecs->addComponent(Light, MaterialComponent{light});
-//    ecs->addComponent(Light, PhysicsComponent{ .mass=10.0f });
-//    ecs->addComponent(Light, ColliderComponent{ .boundingRadius=100.0f });
-    
     Entity Light = ecs->createEntity();
     ecs->addComponent(Light, MeshComponent{rm->getMesh("/Users/nathan/Downloads/untitled.obj")});
     ecs->addComponent(Light, BVHComponent{rm->getBVH("/Users/nathan/Downloads/untitled.obj")});
-    ecs->addComponent(Light, TransformComponent{ .translation=glm::vec3(0.0f, -4.8f, 0.0f), .scale=1.0f /*, .rotation=glm::vec3(1.0f, 1.0f, 0.0f)*/ } );
+    ecs->addComponent(Light, TransformComponent{ glm::vec3(-6.0f, -15.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 8.0f} );
     ecs->addComponent(Light, MaterialComponent{light});
-    ecs->addComponent(Light, PhysicsComponent{ .mass=1000000000000.0f, .velocity=glm::vec3(0.0f, 2.0f, 0.0f), .angularVelocity=glm::vec3(0.0f, 0.0f, 0.0f) });
-    ecs->addComponent(Light, ColliderComponent{ .boundingRadius=100.0f,
-            .inertiaTensor = glm::mat3{1.0f/12.0f * 10.0f * (2*2 + 2*2), 0.0f, 0.0f,
-                0.0f, 1.0f/12.0f * 10.0f * (2*2 + 2*2), 0.0f,
-                0.0f, 0.0f, 1.0f/12.0f * 10.0f * (2*2 + 2*2) } } ); //not actually correct
+    ecs->addComponent(Light, PhysicsComponent{ .mass=10.0f });
+    ecs->addComponent(Light, ColliderComponent{ .boundingRadius=100.0f });
+    
+//    Entity Light = ecs->createEntity();
+//    ecs->addComponent(Light, MeshComponent{rm->getMesh("/Users/nathan/Downloads/untitled.obj")});
+//    ecs->addComponent(Light, BVHComponent{rm->getBVH("/Users/nathan/Downloads/untitled.obj")});
+//    ecs->addComponent(Light, TransformComponent{ .translation=glm::vec3(0.0f, -4.8f, 0.0f), .scale=1.0f /*, .rotation=glm::vec3(1.0f, 1.0f, 0.0f)*/ } );
+//    ecs->addComponent(Light, MaterialComponent{light});
+//    ecs->addComponent(Light, PhysicsComponent{ .mass=1000000000000.0f, .velocity=glm::vec3(0.0f, 2.0f, 0.0f), .angularVelocity=glm::vec3(0.0f, 0.0f, 0.0f) });
+//    ecs->addComponent(Light, ColliderComponent{ .boundingRadius=100.0f,
+//            .inertiaTensor = glm::mat3{1.0f/12.0f * 10.0f * (2*2 + 2*2), 0.0f, 0.0f,
+//                0.0f, 1.0f/12.0f * 10.0f * (2*2 + 2*2), 0.0f,
+//                0.0f, 0.0f, 1.0f/12.0f * 10.0f * (2*2 + 2*2) } } ); //not actually correct
     
     //Entity sponza = ecs->createEntity();
     //ecs->addComponent(sponza, BVHComponent{rm->getBVH("/Users/nathan/Downloads/sponza.obj")});
